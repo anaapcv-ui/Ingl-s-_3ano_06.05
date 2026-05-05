@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Interativo – Animal World 🎯</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #7CB342;
+    --laranja: #FF8A65;
+    --amarelo: #FFD54F;
+    --azul: #5C6BC0;
+    --rosa: #F48FB1;
+    --texto: #3E2723;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(180deg, #FFE082 0%, #FFB74D 50%, #FF8A65 100%);
+    min-height: 100vh;
+    color: var(--texto);
+    padding: 16px 12px 60px;
+  }
+
+  /* DECORAÇÃO FUNDO - Padrão de patinhas */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255,255,255,0.12) 12px, transparent 13px),
+      radial-gradient(circle at 80% 30%, rgba(255,255,255,0.12) 18px, transparent 19px),
+      radial-gradient(circle at 30% 70%, rgba(255,255,255,0.12) 15px, transparent 16px),
+      radial-gradient(circle at 70% 85%, rgba(255,255,255,0.12) 20px, transparent 21px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    background: white;
+    border-radius: 28px;
+    padding: 22px 18px;
+    text-align: center;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+    border: 4px solid #FFB74D;
+    margin-bottom: 18px;
+  }
+
+  .header .target {
+    font-size: 3rem;
+    animation: spin 4s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+  }
+
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.6rem, 5vw, 2.3rem);
+    color: #E64A19;
+    line-height: 1.1;
+  }
+
+  .header p {
+    font-weight: 800;
+    color: #6D4C41;
+    font-size: 0.95rem;
+    margin-top: 6px;
+  }
+
+  /* PLACAR FIXO */
+  .scoreboard {
+    background: linear-gradient(135deg, #5D4037, #3E2723);
+    color: white;
+    border-radius: 22px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    border: 3px solid #FFD54F;
+  }
+
+  .score-left, .score-right {
+    text-align: center;
+  }
+
+  .score-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: #FFD54F;
+    line-height: 1;
+  }
+
+  .score-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+    opacity: 0.85;
+  }
+
+  .progress-mid {
+    flex: 1;
+    margin: 0 14px;
+  }
+
+  .prog-bar-wrap {
+    background: rgba(255,255,255,0.2);
+    border-radius: 50px;
+    height: 12px;
+    overflow: hidden;
+  }
+
+  .prog-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #FFD54F, #FF8A65);
+    border-radius: 50px;
+    transition: width 0.5s cubic-bezier(.34,1.56,.64,1);
+    width: 0%;
+  }
+
+  .prog-text {
+    font-size: 0.75rem;
+    text-align: center;
+    margin-top: 4px;
+    font-weight: 700;
+    opacity: 0.9;
+  }
+
+  /* CARD DA QUESTÃO */
+  .question-card {
+    background: white;
+    border-radius: 26px;
+    padding: 22px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideIn 0.4s ease forwards;
+    border-top: 8px solid;
+  }
+
+  .q-1 { border-color: #FF6B35; }
+  .q-2 { border-color: #7CB342; }
+  .q-3 { border-color: #5C6BC0; }
+  .q-4 { border-color: #AB47BC; }
+  .q-5 { border-color: #00ACC1; }
+  .q-6 { border-color: #F48FB1; }
+  .q-7 { border-color: #FFB300; }
+  .q-8 { border-color: #66BB6A; }
+  .q-9 { border-color: #EF5350; }
+  .q-10 { border-color: #5C6BC0; }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .q-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    color: #FF6F00;
+    background: #FFF8E1;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #FFB300;
+    flex-shrink: 0;
+  }
+
+  .q-emoji {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  .q-text {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--texto);
+    line-height: 1.45;
+    margin-bottom: 14px;
+  }
+
+  /* ÁUDIO NA QUESTÃO */
+  .audio-q {
+    background: linear-gradient(135deg, #FF6F00, #FF8F00);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255,111,0,0.4);
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+
+  .audio-q:hover {
+    transform: scale(1.05);
+  }
+
+  .audio-q.playing {
+    background: linear-gradient(135deg, #00C853, #64DD17);
+    animation: pulse 0.8s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+
+  /* OPÇÕES */
+  .opts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    border-radius: 16px;
+    border: 3px solid #FFE0B2;
+    background: #FFF8E1;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--texto);
+    text-align: left;
+    width: 100%;
+    transition: all 0.18s;
+  }
+
+  .opt:hover:not(:disabled) {
+    border-color: #FFB300;
+    background: #FFECB3;
+    transform: translateX(4px);
+  }
+
+  .opt-letter {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: #FF8A65;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .opt.correct {
+    border-color: #4CAF50;
+    background: #E8F5E9;
+    color: #1B5E20;
+  }
+  .opt.correct .opt-letter { background: #4CAF50; }
+
+  .opt.wrong {
+    border-color: #F44336;
+    background: #FFEBEE;
+    color: #B71C1C;
+  }
+  .opt.wrong .opt-letter { background: #F44336; }
+
+  .opt:disabled { cursor: default; }
+
+  /* FEEDBACK */
+  .feedback {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .feedback.show { display: block; animation: fadeUp 0.3s ease; }
+
+  .feedback.right {
+    background: #E8F5E9;
+    border: 2px solid #81C784;
+    color: #1B5E20;
+  }
+
+  .feedback.wrong-fb {
+    background: #FFF3E0;
+    border: 2px solid #FFB74D;
+    color: #BF360C;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESULTADO FINAL */
+  .resultado {
+    display: none;
+    background: white;
+    border-radius: 28px;
+    padding: 30px 22px;
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    border: 5px solid #FFB300;
+  }
+
+  .resultado.show {
+    display: block;
+    animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .res-emoji {
+    font-size: 5rem;
+    animation: bounce 1s ease infinite alternate;
+  }
+
+  @keyframes bounce {
+    from { transform: translateY(0) rotate(-5deg); }
+    to { transform: translateY(-15px) rotate(5deg); }
+  }
+
+  .resultado h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    margin: 10px 0 4px;
+  }
+
+  .nota {
+    font-family: 'Fredoka One', cursive;
+    font-size: 4rem;
+    line-height: 1;
+    margin: 8px 0;
+  }
+
+  .resultado p {
+    font-weight: 700;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .restart-btn {
+    background: linear-gradient(135deg, #FF6F00, #FF8F00);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    cursor: pointer;
+    margin-top: 14px;
+    box-shadow: 0 6px 18px rgba(255,111,0,0.4);
+  }
+
+  .restart-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(255,111,0,0.5);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="target">🎯</span>
+    <h1>Quiz Rápido<br>Animal World</h1>
+    <p>10 perguntas para treinar antes da prova!</p>
+  </div>
+
+  <!-- PLACAR -->
+  <div class="scoreboard">
+    <div class="score-left">
+      <div class="score-num" id="acertos">0</div>
+      <div class="score-label">✅ Acertos</div>
+    </div>
+    <div class="progress-mid">
+      <div class="prog-bar-wrap"><div class="prog-bar" id="progBar"></div></div>
+      <div class="prog-text" id="progText">0 de 10</div>
+    </div>
+    <div class="score-right">
+      <div class="score-num" id="erros">0</div>
+      <div class="score-label">❌ Erros</div>
+    </div>
+  </div>
+
+  <!-- QUESTÕES -->
+  <div id="questoes"></div>
+
+  <!-- RESULTADO -->
+  <div class="resultado" id="resultado">
+    <span class="res-emoji" id="resEmoji">🏆</span>
+    <h2 id="resTitulo">Parabéns!</h2>
+    <div class="nota" id="resNota">10/10</div>
+    <p id="resMsg">Você arrasou!</p>
+    <button class="restart-btn" onclick="reiniciar()">🔄 Jogar de novo</button>
+  </div>
+
+</div>
+
+<script>
+const perguntas = [
+  {
+    emoji: "🐄",
+    audio: "cow",
+    pergunta: "Como dizemos VACA em inglês? 🐄 (aperte 🔊 para ouvir)",
+    opcoes: ["sheep", "cow", "goat", "duck"],
+    correta: 1,
+    feedback_certo: "✅ Isso! Cow = Vaca! 🐄",
+    feedback_erro: "❌ Quase! A resposta certa é 'cow' = vaca."
+  },
+  {
+    emoji: "🦋",
+    audio: "butterfly",
+    pergunta: "Como dizemos BORBOLETA em inglês? 🦋",
+    opcoes: ["ladybug", "ant", "butterfly", "mosquito"],
+    correta: 2,
+    feedback_certo: "✅ Perfeito! Butterfly = Borboleta! 🦋",
+    feedback_erro: "❌ A resposta é 'butterfly'! 🦋 ('butter' + 'fly')"
+  },
+  {
+    emoji: "🐔",
+    audio: "These are chickens",
+    pergunta: "Aponte para 3 galinhas que estão PERTO. Como dizer? (são MUITAS e PERTO)",
+    opcoes: ["This is a chicken", "That's a chicken", "These are chickens", "Those are chickens"],
+    correta: 2,
+    feedback_certo: "✅ Muito bem! 'These are' = vários + perto! 🐔🐔",
+    feedback_erro: "❌ É 'These are chickens'! These = vários + perto."
+  },
+  {
+    emoji: "🐢",
+    audio: "shell",
+    pergunta: "Qual cobertura do corpo a tartaruga 🐢 tem?",
+    opcoes: ["fur (pelo)", "scales (escamas)", "feathers (penas)", "shell (casco)"],
+    correta: 3,
+    feedback_certo: "✅ Boa! Turtle = shell (casco). 🐢",
+    feedback_erro: "❌ Tartaruga tem 'shell' (casco). 🐢"
+  },
+  {
+    emoji: "🐛",
+    audio: "What is this?",
+    pergunta: "Você vê 1 lagarta PERTINHO de você. Como pergunta o que é?",
+    opcoes: ["What's this?", "What's that?", "What are these?", "What are those?"],
+    correta: 0,
+    feedback_certo: "✅ Isso! 1 + perto = 'What's this?' 🐛",
+    feedback_erro: "❌ A resposta é 'What's this?' (1 coisa + perto)"
+  },
+  {
+    emoji: "🦆",
+    audio: "duck",
+    pergunta: "Olha o desenho 🦆! Que animal é esse em inglês?",
+    opcoes: ["a goat", "a duck", "a sheep", "a cow"],
+    correta: 1,
+    feedback_certo: "✅ Quack quack! 🦆 Duck = Pato!",
+    feedback_erro: "❌ É 'duck' (pato). Lembra do som 'quack'? 🦆"
+  },
+  {
+    emoji: "🐜",
+    audio: "an ant",
+    pergunta: "Para falar UMA FORMIGA, qual é o jeito CERTO?",
+    opcoes: ["a ant", "an ant", "the ant", "an ants"],
+    correta: 1,
+    feedback_certo: "✅ Show! Antes de palavra com vogal usamos 'an'. 'an ant' 🐜",
+    feedback_erro: "❌ É 'an ant'! Antes de vogal (a, e, i, o, u) usamos 'an' em vez de 'a'."
+  },
+  {
+    emoji: "🦗",
+    audio: "They are grasshoppers",
+    pergunta: "Você vê 2 gafanhotos LONGE. Como dizer? (vários + longe)",
+    opcoes: ["This is a grasshopper", "These are grasshoppers", "Those are grasshoppers", "That's a grasshopper"],
+    correta: 2,
+    feedback_certo: "✅ Excelente! 'Those are' = vários + longe! 🦗🦗",
+    feedback_erro: "❌ É 'Those are grasshoppers'. Those = vários + longe."
+  },
+  {
+    emoji: "🐍",
+    audio: "scales",
+    pergunta: "A cobra 🐍 tem qual cobertura no corpo?",
+    opcoes: ["feathers (penas)", "fur (pelo)", "scales (escamas)", "shell (casco)"],
+    correta: 2,
+    feedback_certo: "✅ Sssssim! Cobra tem 'scales' (escamas). 🐍",
+    feedback_erro: "❌ A cobra tem 'scales' (escamas). 🐍"
+  },
+  {
+    emoji: "🐐",
+    audio: "It is a goat",
+    pergunta: "Apontando para 1 cabra perto: \"This is ___ goat.\" Complete a frase.",
+    opcoes: ["a", "an", "the", "are"],
+    correta: 0,
+    feedback_certo: "✅ Perfeito! 'This is A goat' (com 'a' porque 'goat' começa com consoante)",
+    feedback_erro: "❌ É 'a goat'! 'goat' começa com G (consoante), então usamos 'a'."
+  }
+];
+
+let respondidas = 0;
+let acertos = 0;
+let erros = 0;
+
+function speak(text, btn) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.82;
+  if (btn) {
+    btn.classList.add('playing');
+    u.onend = () => btn.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+
+function init() {
+  const cont = document.getElementById('questoes');
+  cont.innerHTML = '';
+  respondidas = 0; acertos = 0; erros = 0;
+  atualizar();
+  document.getElementById('resultado').classList.remove('show');
+
+  perguntas.forEach((q, i) => {
+    const letras = ['A','B','C','D'];
+    const card = document.createElement('div');
+    card.className = `question-card q-${i+1}`;
+    card.id = `q${i}`;
+    card.style.animationDelay = `${i * 0.06}s`;
+
+    card.innerHTML = `
+      <div class="q-head">
+        <div class="q-num">${i+1}</div>
+        <span class="q-emoji">${q.emoji}</span>
+      </div>
+      <div class="q-text">${q.pergunta}</div>
+      <button class="audio-q" onclick="speak('${q.audio}', this)">🔊 Ouvir em inglês</button>
+      <div class="opts" id="opts-${i}">
+        ${q.opcoes.map((o, oi) => `
+          <button class="opt" onclick="responder(${i}, ${oi})" id="opt-${i}-${oi}">
+            <span class="opt-letter">${letras[oi]}</span>
+            <span>${o}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="fb-${i}"></div>
+    `;
+    cont.appendChild(card);
+  });
+}
+
+function responder(qi, oi) {
+  const q = perguntas[qi];
+  const opts = document.querySelectorAll(`#opts-${qi} .opt`);
+  opts.forEach(o => o.disabled = true);
+
+  const certa = q.correta;
+  opts[oi].classList.add(oi === certa ? 'correct' : 'wrong');
+  if (oi !== certa) opts[certa].classList.add('correct');
+
+  const fb = document.getElementById(`fb-${qi}`);
+  const acertou = oi === certa;
+  fb.textContent = acertou ? q.feedback_certo : q.feedback_erro;
+  fb.className = `feedback show ${acertou ? 'right' : 'wrong-fb'}`;
+
+  respondidas++;
+  if (acertou) acertos++; else erros++;
+  atualizar();
+
+  if (respondidas === perguntas.length) {
+    setTimeout(mostrarFinal, 700);
+  }
+
+  setTimeout(() => {
+    const next = document.getElementById(`q${qi+1}`);
+    if (next) next.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }, 600);
+}
+
+function atualizar() {
+  document.getElementById('acertos').textContent = acertos;
+  document.getElementById('erros').textContent = erros;
+  document.getElementById('progBar').style.width = (respondidas / perguntas.length * 100) + '%';
+  document.getElementById('progText').textContent = `${respondidas} de ${perguntas.length}`;
+}
+
+function mostrarFinal() {
+  const r = document.getElementById('resultado');
+  r.classList.add('show');
+  r.scrollIntoView({behavior:'smooth', block:'center'});
+
+  document.getElementById('resNota').textContent = `${acertos}/${perguntas.length}`;
+
+  let emoji, titulo, msg, cor;
+  if (acertos === 10) { emoji='🏆'; titulo='GABARITOU!'; msg='Você é uma estrela do inglês! 🌟'; cor='#1B5E20'; }
+  else if (acertos >= 8) { emoji='🥇'; titulo='Excelente!'; msg='Quase perfeito! Você está pronto! 😄'; cor='#1565C0'; }
+  else if (acertos >= 6) { emoji='🥈'; titulo='Muito bem!'; msg='Bom trabalho! Revise o resumo e arrasa! 💪'; cor='#F57F17'; }
+  else if (acertos >= 4) { emoji='🥉'; titulo='Continue!'; msg='Você está aprendendo! Estuda mais um pouquinho! 📚'; cor='#E65100'; }
+  else { emoji='📖'; titulo='Vamos revisar!'; msg='Não desanime! Volte ao resumo e tente de novo! 💛'; cor='#B71C1C'; }
+
+  document.getElementById('resEmoji').textContent = emoji;
+  document.getElementById('resTitulo').textContent = titulo;
+  document.getElementById('resTitulo').style.color = cor;
+  document.getElementById('resNota').style.color = cor;
+  document.getElementById('resMsg').textContent = msg;
+}
+
+function reiniciar() {
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(init, 400);
+}
+
+init();
+
+if ('speechSynthesis' in window) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+}
+</script>
+
+</body>
+</html>

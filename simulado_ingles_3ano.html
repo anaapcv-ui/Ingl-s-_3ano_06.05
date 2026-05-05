@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado – Animal World 📝</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #66BB6A;
+    --laranja: #FF8A65;
+    --azul: #5C6BC0;
+    --texto: #3E2723;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background:
+      radial-gradient(circle at 20% 0%, #B3E5FC 0%, transparent 40%),
+      radial-gradient(circle at 80% 100%, #C5E1A5 0%, transparent 40%),
+      linear-gradient(160deg, #E1F5FE 0%, #FFF8E1 50%, #DCEDC8 100%);
+    min-height: 100vh;
+    color: var(--texto);
+    padding: 16px 12px 60px;
+  }
+
+  .wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #66BB6A, #43A047);
+    color: white;
+    border-radius: 28px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 8px 28px rgba(67,160,71,0.35);
+    border: 4px solid white;
+    margin-bottom: 18px;
+  }
+
+  .header .anim-row {
+    font-size: 2.3rem;
+    margin-bottom: 4px;
+    animation: walk 3s ease infinite;
+  }
+
+  @keyframes walk {
+    0%,100% { transform: translateX(0); }
+    50% { transform: translateX(8px); }
+  }
+
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    text-shadow: 2px 3px 0 rgba(0,0,0,0.2);
+    line-height: 1.1;
+  }
+
+  .header p {
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin-top: 6px;
+    opacity: 0.95;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meta-badge {
+    background: rgba(255,255,255,0.25);
+    border: 2px solid white;
+    border-radius: 50px;
+    padding: 4px 14px;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  /* PLACAR FIXO LATERAL */
+  .scoreboard {
+    position: fixed;
+    top: 16px;
+    right: 12px;
+    z-index: 100;
+    background: rgba(46,125,50,0.95);
+    border: 3px solid #FFD54F;
+    border-radius: 18px;
+    padding: 10px 14px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    min-width: 80px;
+  }
+
+  .score-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.85;
+  }
+
+  .score-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.7rem;
+    color: #FFD54F;
+    line-height: 1;
+  }
+
+  .score-sub {
+    font-size: 0.68rem;
+    margin-top: 2px;
+    opacity: 0.85;
+    font-weight: 700;
+  }
+
+  /* PROGRESSO */
+  .prog-wrap {
+    background: white;
+    border-radius: 50px;
+    height: 14px;
+    border: 3px solid #66BB6A;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FFD54F, #FF8A65, #43A047);
+    width: 0%;
+    transition: width 0.5s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .prog-text {
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #2E7D32;
+    margin-bottom: 18px;
+  }
+
+  /* CARD QUESTÃO */
+  .q-card {
+    background: white;
+    border-radius: 24px;
+    padding: 20px 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.1);
+    border-left: 8px solid;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideIn 0.4s ease forwards;
+  }
+
+  .q-facil { border-color: #66BB6A; }
+  .q-medio { border-color: #FF8A65; }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .q-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #2E7D32;
+    min-width: 36px;
+  }
+
+  .q-level {
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 50px;
+    text-transform: uppercase;
+  }
+
+  .lvl-facil { background: #E8F5E9; color: #2E7D32; border: 2px solid #A5D6A7; }
+  .lvl-medio { background: #FFF3E0; color: #E65100; border: 2px solid #FFCC80; }
+
+  .q-text {
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    color: var(--texto);
+  }
+
+  .q-text .en {
+    background: #FFF8E1;
+    padding: 2px 8px;
+    border-radius: 6px;
+    color: #E65100;
+    font-style: italic;
+    border-bottom: 2px solid #FFB300;
+  }
+
+  /* ÁUDIO */
+  .audio-q {
+    background: linear-gradient(135deg, #FF6F00, #FF8F00);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50px;
+    padding: 7px 14px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255,111,0,0.3);
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+
+  .audio-q:hover { transform: scale(1.05); }
+  .audio-q.playing { background: linear-gradient(135deg, #00C853, #64DD17); animation: pulseA 0.8s infinite; }
+
+  @keyframes pulseA {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+
+  /* OPÇÕES */
+  .opts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border-radius: 14px;
+    border: 2.5px solid #DCEDC8;
+    background: #F1F8E9;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--texto);
+    text-align: left;
+    width: 100%;
+    transition: all 0.18s;
+  }
+
+  .opt:hover:not(:disabled) {
+    border-color: #66BB6A;
+    background: #C5E1A5;
+    transform: translateX(3px);
+  }
+
+  .opt-letter {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #66BB6A;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  .opt.correct {
+    border-color: #2E7D32;
+    background: #C8E6C9;
+    color: #1B5E20;
+  }
+  .opt.correct .opt-letter { background: #2E7D32; }
+
+  .opt.wrong {
+    border-color: #C62828;
+    background: #FFCDD2;
+    color: #B71C1C;
+  }
+  .opt.wrong .opt-letter { background: #C62828; }
+
+  .opt:disabled { cursor: default; }
+
+  /* FEEDBACK */
+  .fb {
+    display: none;
+    margin-top: 12px;
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .fb.show { display: block; animation: fadeIn 0.3s; }
+
+  .fb.right {
+    background: #E8F5E9;
+    border: 2px solid #81C784;
+    color: #1B5E20;
+  }
+
+  .fb.wrong-f {
+    background: #FFF3E0;
+    border: 2px solid #FFB74D;
+    color: #BF360C;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESULTADO FINAL */
+  .resultado {
+    display: none;
+    background: white;
+    border-radius: 28px;
+    padding: 30px 22px;
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    border: 5px solid #43A047;
+    margin-top: 20px;
+  }
+
+  .resultado.show { display: block; animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1); }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .res-emoji {
+    font-size: 5rem;
+    animation: bounceR 1s ease infinite alternate;
+    display: inline-block;
+  }
+
+  @keyframes bounceR {
+    from { transform: rotate(-8deg); }
+    to { transform: rotate(8deg) scale(1.05); }
+  }
+
+  .resultado h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    margin: 8px 0 4px;
+  }
+
+  .nota-big {
+    font-family: 'Fredoka One', cursive;
+    font-size: 4rem;
+    line-height: 1;
+    margin: 8px 0;
+  }
+
+  .resultado p {
+    font-weight: 700;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .grid-res {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 14px 0;
+  }
+
+  .box-res {
+    border-radius: 14px;
+    padding: 12px;
+    font-weight: 800;
+  }
+  .box-res.cer { background: #E8F5E9; color: #2E7D32; border: 2px solid #A5D6A7; }
+  .box-res.err { background: #FFEBEE; color: #C62828; border: 2px solid #EF9A9A; }
+
+  .box-res .num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+
+  .restart-btn {
+    background: linear-gradient(135deg, #43A047, #66BB6A);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    cursor: pointer;
+    margin-top: 14px;
+    box-shadow: 0 6px 18px rgba(67,160,71,0.4);
+  }
+
+  @media (max-width: 500px) {
+    .scoreboard { top: auto; bottom: 12px; right: 12px; }
+    .wrapper { padding-bottom: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PLACAR FIXO -->
+<div class="scoreboard">
+  <div class="score-label">⭐ Pontos</div>
+  <div class="score-num" id="pontos">0</div>
+  <div class="score-sub">de 20</div>
+</div>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="anim-row">🐑 🐔 🦆 🐐 🐄 🫏</div>
+    <h1>Simulado<br>Animal World 📝</h1>
+    <p>Inglês • 3º Ano • Unit 3</p>
+    <div class="meta-row">
+      <span class="meta-badge">📋 20 Questões</span>
+      <span class="meta-badge">⭐ Fácil & Médio</span>
+      <span class="meta-badge">🔊 Com Áudio</span>
+    </div>
+  </div>
+
+  <!-- PROGRESSO -->
+  <div class="prog-wrap"><div class="prog-fill" id="progFill"></div></div>
+  <div class="prog-text" id="progTxt">0 de 20 respondidas</div>
+
+  <!-- QUESTÕES -->
+  <div id="questoes"></div>
+
+  <!-- RESULTADO -->
+  <div class="resultado" id="resultado">
+    <span class="res-emoji" id="resE">🏆</span>
+    <h2 id="resT" style="color:#1B5E20">GABARITOU!</h2>
+    <div class="nota-big" id="resN" style="color:#1B5E20">20/20</div>
+    <p id="resM">Você é uma estrela!</p>
+    <div class="grid-res">
+      <div class="box-res cer">
+        <div class="num" id="totC">0</div>
+        <div>✅ Acertos</div>
+      </div>
+      <div class="box-res err">
+        <div class="num" id="totE">0</div>
+        <div>❌ Erros</div>
+      </div>
+    </div>
+    <p style="font-size:0.85rem;color:#888">Boa! Continue treinando para a prova! 🌟</p>
+    <button class="restart-btn" onclick="reiniciar()">🔄 Tentar de novo</button>
+  </div>
+
+</div>
+
+<script>
+const questoes = [
+  // ============ FÁCEIS (1-10) ============
+  {
+    nivel: "facil",
+    pergunta: 'Qual animal é este? 🐑',
+    audio: "sheep",
+    opcoes: ["a) cow", "b) sheep", "c) chicken", "d) goat"],
+    correta: 1,
+    fb_certo: "✅ Isso! 'sheep' = ovelha. 🐑",
+    fb_erro: "❌ Não! A ovelha em inglês é 'sheep'. 🐑"
+  },
+  {
+    nivel: "facil",
+    pergunta: 'Qual destes animais é a GALINHA?',
+    audio: "chicken",
+    opcoes: ["a) goat", "b) duck", "c) chicken", "d) donkey"],
+    correta: 2,
+    fb_certo: "✅ Boa! Chicken = galinha! 🐔",
+    fb_erro: "❌ A galinha é 'chicken'. 🐔"
+  },
+  {
+    nivel: "facil",
+    pergunta: 'Como dizemos BURRO em inglês? 🫏',
+    audio: "donkey",
+    opcoes: ["a) duck", "b) cow", "c) sheep", "d) donkey"],
+    correta: 3,
+    fb_certo: "✅ Certo! Donkey = burro! 🫏",
+    fb_erro: "❌ Burro é 'donkey'. 🫏"
+  },
+  {
+    nivel: "facil",
+    pergunta: 'O pato em inglês se chama:',
+    audio: "duck",
+    opcoes: ["a) duck", "b) cow", "c) goat", "d) sheep"],
+    correta: 0,
+    fb_certo: "✅ Quack quack! 🦆 Duck = pato!",
+    fb_erro: "❌ É 'duck'! Lembra que pato faz 'quack quack'? 🦆"
+  },
+  {
+    nivel: "facil",
+    pergunta: 'Qual é a CABRA em inglês? 🐐',
+    audio: "goat",
+    opcoes: ["a) chicken", "b) goat", "c) donkey", "d) duck"],
+    correta: 1,
+    fb_certo: "✅ Goat = cabra! 🐐",
+    fb_erro: "❌ Cabra é 'goat'. 🐐"
+  },
+  {
+    nivel: "facil",
+    pergunta: '🐞 Qual inseto é este?',
+    audio: "ladybug",
+    opcoes: ["a) butterfly", "b) ant", "c) ladybug", "d) mosquito"],
+    correta: 2,
+    fb_certo: "✅ Ladybug = joaninha! 🐞",
+    fb_erro: "❌ É 'ladybug' (joaninha). 🐞"
+  },
+  {
+    nivel: "facil",
+    pergunta: '🐜 Como dizemos FORMIGA em inglês?',
+    audio: "ant",
+    opcoes: ["a) ant", "b) ladybug", "c) caterpillar", "d) grasshopper"],
+    correta: 0,
+    fb_certo: "✅ Boa! Ant = formiga! 🐜",
+    fb_erro: "❌ Formiga é 'ant'. 🐜"
+  },
+  {
+    nivel: "facil",
+    pergunta: 'Cachorros e gatos são cobertos por:',
+    audio: "fur",
+    opcoes: ["a) feathers", "b) scales", "c) shell", "d) fur"],
+    correta: 3,
+    fb_certo: "✅ Isso! Eles têm 'fur' (pelo)! 🐶🐱",
+    fb_erro: "❌ Cães e gatos têm 'fur' (pelo)."
+  },
+  {
+    nivel: "facil",
+    pergunta: 'Como completar: "This ____ a cow." (Esta é uma vaca)',
+    audio: "This is a cow",
+    opcoes: ["a) are", "b) is", "c) am", "d) be"],
+    correta: 1,
+    fb_certo: "✅ Boa! 'This IS a cow' = Esta É uma vaca.",
+    fb_erro: "❌ É 'is'. 'This IS a cow' (esta É uma vaca)."
+  },
+  {
+    nivel: "facil",
+    pergunta: 'A LAGARTA 🐛 em inglês é:',
+    audio: "caterpillar",
+    opcoes: ["a) butterfly", "b) caterpillar", "c) ant", "d) ladybug"],
+    correta: 1,
+    fb_certo: "✅ Caterpillar = lagarta! 🐛 Depois ela vira borboleta!",
+    fb_erro: "❌ Lagarta é 'caterpillar'. 🐛"
+  },
+
+  // ============ MÉDIAS (11-20) ============
+  {
+    nivel: "medio",
+    pergunta: '🦋🦋 (Vejo várias borboletas LONGE de mim). Como digo?',
+    audio: "Those are butterflies",
+    opcoes: ["a) This is butterflies", "b) That's a butterfly", "c) These are butterflies", "d) Those are butterflies"],
+    correta: 3,
+    fb_certo: "✅ Show! Vários + LONGE = 'Those are'! 🦋🦋",
+    fb_erro: "❌ Vários + longe = 'Those are'. Resposta: 'Those are butterflies'."
+  },
+  {
+    nivel: "medio",
+    pergunta: 'Pergunta: "What\'s ___?" (apontando para algo PERTINHO)',
+    audio: "What is this",
+    opcoes: ["a) this", "b) that", "c) these", "d) those"],
+    correta: 0,
+    fb_certo: "✅ Perto = 'this'. 'What\'s this?' = O que é isto?",
+    fb_erro: "❌ Perto = 'this'. Pergunta: 'What\'s THIS?' (O que é ISTO aqui?)"
+  },
+  {
+    nivel: "medio",
+    pergunta: 'Como completar: "It\'s ___ ant." (É uma formiga)',
+    audio: "It is an ant",
+    opcoes: ["a) a", "b) an", "c) the", "d) is"],
+    correta: 1,
+    fb_certo: "✅ Bingo! 'ant' começa com vogal (A) → usamos 'AN ant'.",
+    fb_erro: "❌ É 'an'! Antes de palavras com vogal (a, e, i, o, u), usamos 'an' em vez de 'a'."
+  },
+  {
+    nivel: "medio",
+    pergunta: 'A tartaruga 🐢 tem qual cobertura?',
+    audio: "shell",
+    opcoes: ["a) fur", "b) feathers", "c) shell", "d) scales"],
+    correta: 2,
+    fb_certo: "✅ Tartaruga tem 'shell' (casco)! 🐢",
+    fb_erro: "❌ Tartaruga tem 'shell' (casco). 🐢"
+  },
+  {
+    nivel: "medio",
+    pergunta: 'Como respondemos: "What are these?" (mostrando 2 mosquitos)',
+    audio: "They are mosquitoes",
+    opcoes: ["a) It's a mosquito", "b) That's a mosquito", "c) They're mosquitoes", "d) This is mosquitoes"],
+    correta: 2,
+    fb_certo: "✅ Vários animais → respondemos 'They're...'. 'They\\'re mosquitoes'! 🦟",
+    fb_erro: "❌ Para vários, respondemos 'They're mosquitoes' (são mosquitos)."
+  },
+  {
+    nivel: "medio",
+    pergunta: 'A galinha 🐔 e o pato 🦆 têm o quê no corpo?',
+    audio: "feathers",
+    opcoes: ["a) fur", "b) scales", "c) feathers", "d) shell"],
+    correta: 2,
+    fb_certo: "✅ Pássaros têm 'feathers' (penas)! 🐔🦆",
+    fb_erro: "❌ Galinhas e patos têm 'feathers' (penas)."
+  },
+  {
+    nivel: "medio",
+    pergunta: 'A cobra 🐍 e o peixe 🐟 são cobertos por:',
+    audio: "scales",
+    opcoes: ["a) fur", "b) shell", "c) feathers", "d) scales"],
+    correta: 3,
+    fb_certo: "✅ Cobras e peixes têm 'scales' (escamas)! 🐍🐟",
+    fb_erro: "❌ Cobras e peixes têm 'scales' (escamas)."
+  },
+  {
+    nivel: "medio",
+    pergunta: 'Frase certa para "Aquela é uma cabra" (1 cabra LONGE):',
+    audio: "That is a goat",
+    opcoes: ["a) This is a goat", "b) Those are goats", "c) That's a goat", "d) These are goats"],
+    correta: 2,
+    fb_certo: "✅ 1 + longe = 'That\\'s a goat'! 🐐",
+    fb_erro: "❌ 1 cabra + longe = 'That\\'s a goat'. (That = aquele/aquela)"
+  },
+  {
+    nivel: "medio",
+    pergunta: 'Para perguntar "O que são AQUELES?" (longe e vários):',
+    audio: "What are those",
+    opcoes: ["a) What's this?", "b) What's that?", "c) What are these?", "d) What are those?"],
+    correta: 3,
+    fb_certo: "✅ Vários + longe = 'What are those?' 👀",
+    fb_erro: "❌ Vários + longe = 'What are those?' (O que são aqueles?)"
+  },
+  {
+    nivel: "medio",
+    pergunta: 'Olha a imagem 🦗🦗🦗 (perto). Como completar: "___ are grasshoppers."',
+    audio: "These are grasshoppers",
+    opcoes: ["a) This", "b) That", "c) These", "d) Those"],
+    correta: 2,
+    fb_certo: "✅ Vários + perto = 'These'! 'These are grasshoppers'! 🦗",
+    fb_erro: "❌ Vários + perto = 'These'. 'These are grasshoppers' (são gafanhotos)."
+  }
+];
+
+let respondidas = 0, acertos = 0, erros = 0;
+
+function speak(text, btn) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.82;
+  if (btn) {
+    btn.classList.add('playing');
+    u.onend = () => btn.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+
+function init() {
+  const cont = document.getElementById('questoes');
+  cont.innerHTML = '';
+  respondidas = 0; acertos = 0; erros = 0;
+  atualizar();
+  document.getElementById('resultado').classList.remove('show');
+
+  questoes.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = `q-card q-${q.nivel}`;
+    card.id = `q${i}`;
+    card.style.animationDelay = `${i * 0.04}s`;
+
+    const lvl = q.nivel === 'facil'
+      ? '<span class="q-level lvl-facil">⭐ Fácil</span>'
+      : '<span class="q-level lvl-medio">🔥 Médio</span>';
+
+    card.innerHTML = `
+      <div class="q-head">
+        <span class="q-num">${i+1}.</span>
+        ${lvl}
+      </div>
+      <div class="q-text">${q.pergunta}</div>
+      <button class="audio-q" onclick="speak('${q.audio}', this)">🔊 Ouvir</button>
+      <div class="opts" id="opts-${i}">
+        ${q.opcoes.map((o, oi) => `
+          <button class="opt" onclick="responder(${i}, ${oi})" id="opt-${i}-${oi}">
+            <span class="opt-letter">${String.fromCharCode(65+oi)}</span>
+            <span>${o.replace(/^[a-d]\) /, '')}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="fb" id="fb-${i}"></div>
+    `;
+    cont.appendChild(card);
+  });
+}
+
+function responder(qi, oi) {
+  const q = questoes[qi];
+  const opts = document.querySelectorAll(`#opts-${qi} .opt`);
+  opts.forEach(o => o.disabled = true);
+
+  const certa = q.correta;
+  opts[oi].classList.add(oi === certa ? 'correct' : 'wrong');
+  if (oi !== certa) opts[certa].classList.add('correct');
+
+  const fb = document.getElementById(`fb-${qi}`);
+  const acertou = oi === certa;
+  fb.textContent = acertou ? q.fb_certo : q.fb_erro;
+  fb.className = `fb show ${acertou ? 'right' : 'wrong-f'}`;
+
+  respondidas++;
+  if (acertou) acertos++; else erros++;
+  atualizar();
+
+  if (respondidas === questoes.length) setTimeout(mostrarFinal, 800);
+
+  setTimeout(() => {
+    const next = document.getElementById(`q${qi+1}`);
+    if (next) next.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }, 600);
+}
+
+function atualizar() {
+  document.getElementById('pontos').textContent = acertos;
+  document.getElementById('progFill').style.width = (respondidas / questoes.length * 100) + '%';
+  document.getElementById('progTxt').textContent = `${respondidas} de ${questoes.length} respondidas`;
+}
+
+function mostrarFinal() {
+  const r = document.getElementById('resultado');
+  r.classList.add('show');
+  r.scrollIntoView({behavior:'smooth', block:'center'});
+  document.getElementById('totC').textContent = acertos;
+  document.getElementById('totE').textContent = erros;
+  document.getElementById('resN').textContent = `${acertos}/20`;
+
+  let emoji, titulo, msg, cor;
+  if (acertos === 20) { emoji='🏆'; titulo='GABARITOU!'; msg='Você acertou tudo! Você é uma estrela do inglês! 🌟'; cor='#1B5E20'; }
+  else if (acertos >= 17) { emoji='🥇'; titulo='Excelente!'; msg='Quase perfeito! Você está supermega preparado! 😄'; cor='#1565C0'; }
+  else if (acertos >= 14) { emoji='🥈'; titulo='Muito bem!'; msg='Ótimo resultado! Revise os erros e arrasa! 💪'; cor='#2E7D32'; }
+  else if (acertos >= 10) { emoji='🥉'; titulo='Bom trabalho!'; msg='Você está aprendendo! Mais um treino e você gabarita! 📚'; cor='#E65100'; }
+  else { emoji='📚'; titulo='Continue estudando!'; msg='Não desanime! Volte ao resumo e tente de novo! 💛'; cor='#B71C1C'; }
+
+  document.getElementById('resE').textContent = emoji;
+  document.getElementById('resT').textContent = titulo;
+  document.getElementById('resT').style.color = cor;
+  document.getElementById('resN').style.color = cor;
+  document.getElementById('resM').textContent = msg;
+}
+
+function reiniciar() {
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(init, 400);
+}
+
+init();
+
+if ('speechSynthesis' in window) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+}
+</script>
+
+</body>
+</html>

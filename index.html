@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Estudo – Inglês 3º Ano 🌾</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #66BB6A;
+    --laranja: #FF8A65;
+    --azul: #5C6BC0;
+    --rosa: #F48FB1;
+    --amarelo: #FFD54F;
+    --texto: #3E2723;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background:
+      linear-gradient(180deg, #87CEEB 0%, #B3E5FC 35%, #C5E1A5 60%, #AED581 100%);
+    min-height: 100vh;
+    color: var(--texto);
+    padding: 16px 12px 60px;
+    overflow-x: hidden;
+  }
+
+  /* CELEIRO/SOL DECORATIVO NO FUNDO */
+  body::before {
+    content: '☀️';
+    position: fixed;
+    top: 4%;
+    right: 6%;
+    font-size: 3.5rem;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+    animation: rotate 20s linear infinite;
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+  }
+
+  body::after {
+    content: '🌾🌾🌾🌻🌾🌾🌻🌾🌾';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    font-size: 1.6rem;
+    text-align: center;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+    letter-spacing: 4px;
+  }
+
+  .wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #FFB74D, #FF8A65, #F48FB1);
+    color: white;
+    border-radius: 30px;
+    padding: 28px 22px;
+    text-align: center;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+    border: 5px solid white;
+    margin-bottom: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '🐄 🐑 🐔 🦆 🐐 🫏';
+    position: absolute;
+    top: 8px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 1.4rem;
+    opacity: 0.4;
+  }
+
+  .header .farm-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 6px;
+    animation: bounce 2s ease infinite;
+    line-height: 1;
+  }
+
+  @keyframes bounce {
+    0%,100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-8px) scale(1.05); }
+  }
+
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.8rem, 6vw, 2.6rem);
+    text-shadow: 3px 4px 0 rgba(0,0,0,0.25);
+    line-height: 1.05;
+    margin-bottom: 8px;
+  }
+
+  .header .subtitle {
+    font-weight: 800;
+    font-size: 1rem;
+    margin-top: 4px;
+    opacity: 0.95;
+  }
+
+  .header .test-info {
+    background: rgba(255,255,255,0.25);
+    border: 2.5px solid white;
+    border-radius: 50px;
+    padding: 6px 18px;
+    display: inline-block;
+    margin-top: 12px;
+    font-weight: 800;
+    font-size: 0.9rem;
+  }
+
+  /* PERSONAGEM GUIA */
+  .welcome {
+    background: white;
+    border-radius: 24px;
+    padding: 18px 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    border: 4px dashed #FF8A65;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .welcome .char {
+    font-size: 3.5rem;
+    flex-shrink: 0;
+    animation: wave 2.5s ease infinite;
+  }
+
+  @keyframes wave {
+    0%,100% { transform: rotate(-5deg); }
+    50% { transform: rotate(8deg); }
+  }
+
+  .welcome .msg {
+    flex: 1;
+    font-weight: 800;
+    line-height: 1.5;
+    color: #5D4037;
+    font-size: 0.92rem;
+  }
+
+  .welcome .msg strong {
+    color: #E64A19;
+    font-size: 1rem;
+  }
+
+  /* TÓPICOS DA PROVA */
+  .topics-card {
+    background: linear-gradient(155deg, #FFF8E1, #FFECB3);
+    border-radius: 22px;
+    padding: 18px;
+    margin-bottom: 20px;
+    border: 3px solid #FFB300;
+    box-shadow: 0 6px 18px rgba(255,179,0,0.25);
+  }
+
+  .topics-card h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #E65100;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .topic-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  @media (min-width: 600px) {
+    .topic-list { grid-template-columns: 1fr 1fr; }
+  }
+
+  .topic-list li {
+    background: white;
+    border-radius: 12px;
+    padding: 9px 12px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: #5D4037;
+    border-left: 4px solid #FFB300;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .topic-list li .ti {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  /* TÍTULO DA SEÇÃO MATERIAIS */
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    color: white;
+    font-size: 1.5rem;
+    margin: 24px 0 14px;
+    text-align: center;
+    text-shadow: 2px 3px 0 rgba(0,0,0,0.25);
+    line-height: 1.1;
+  }
+
+  /* CARDS DOS MATERIAIS */
+  .materials {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  @media (min-width: 600px) {
+    .materials { grid-template-columns: 1fr 1fr; }
+  }
+
+  .material-card {
+    background: white;
+    border-radius: 22px;
+    padding: 20px 18px;
+    text-decoration: none;
+    color: var(--texto);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.12);
+    border-top: 7px solid;
+    transition: all 0.25s;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .material-card:hover {
+    transform: translateY(-5px) rotate(-0.5deg);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.18);
+  }
+
+  .material-card .step-num {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    opacity: 0.18;
+    line-height: 1;
+  }
+
+  .material-card .icon-big {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 10px;
+    line-height: 1;
+  }
+
+  .material-card h3 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+
+  .material-card p {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #555;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  .material-card .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: white;
+  }
+
+  /* CORES DOS CARDS */
+  .m1 { border-color: #43A047; }
+  .m1 h3 { color: #2E7D32; }
+  .m1 .tag { background: #43A047; }
+
+  .m2 { border-color: #5C6BC0; }
+  .m2 h3 { color: #283593; }
+  .m2 .tag { background: #5C6BC0; }
+
+  .m3 { border-color: #FF6F00; }
+  .m3 h3 { color: #BF360C; }
+  .m3 .tag { background: #FF6F00; }
+
+  .m4 { border-color: #AB47BC; }
+  .m4 h3 { color: #6A1B9A; }
+  .m4 .tag { background: #AB47BC; }
+
+  /* TRILHA DE ESTUDO */
+  .trail {
+    background: white;
+    border-radius: 22px;
+    padding: 20px 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    border: 3px solid #5C6BC0;
+  }
+
+  .trail h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #283593;
+    font-size: 1.3rem;
+    margin-bottom: 14px;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .trail-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    padding-left: 8px;
+  }
+
+  .trail-steps::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 30px;
+    bottom: 30px;
+    width: 4px;
+    background: linear-gradient(180deg, #43A047, #5C6BC0, #FF6F00, #AB47BC);
+    border-radius: 4px;
+  }
+
+  .trail-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #F5F7FF;
+    padding: 10px 14px;
+    border-radius: 14px;
+    border: 2px solid #C5CAE9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .trail-step .step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .trail-step:nth-child(1) .step-circle { border-color: #43A047; color: #2E7D32; }
+  .trail-step:nth-child(2) .step-circle { border-color: #5C6BC0; color: #283593; }
+  .trail-step:nth-child(3) .step-circle { border-color: #FF6F00; color: #BF360C; }
+  .trail-step:nth-child(4) .step-circle { border-color: #AB47BC; color: #6A1B9A; }
+
+  .trail-step .step-text {
+    flex: 1;
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: #3E2723;
+    line-height: 1.35;
+  }
+
+  .trail-step .step-text small {
+    display: block;
+    font-weight: 700;
+    color: #777;
+    font-size: 0.78rem;
+    margin-top: 2px;
+  }
+
+  /* DICAS PARA A FAMÍLIA */
+  .family-box {
+    background: linear-gradient(155deg, #FCE4EC, #F8BBD0);
+    border-radius: 22px;
+    padding: 18px;
+    border: 3px solid #EC407A;
+    box-shadow: 0 6px 18px rgba(236,64,122,0.25);
+  }
+
+  .family-box h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #AD1457;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .family-box ul {
+    list-style: none;
+  }
+
+  .family-box li {
+    padding: 6px 0 6px 24px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #5D4037;
+    line-height: 1.4;
+    position: relative;
+  }
+
+  .family-box li::before {
+    content: '🌟';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    font-size: 0.95rem;
+  }
+
+  /* ANIMAÇÃO ENTRADA */
+  .welcome, .topics-card, .material-card, .trail, .family-box {
+    animation: slideUp 0.5s ease backwards;
+  }
+
+  .welcome { animation-delay: 0.05s; }
+  .topics-card { animation-delay: 0.1s; }
+  .material-card:nth-child(1) { animation-delay: 0.15s; }
+  .material-card:nth-child(2) { animation-delay: 0.20s; }
+  .material-card:nth-child(3) { animation-delay: 0.25s; }
+  .material-card:nth-child(4) { animation-delay: 0.30s; }
+  .trail { animation-delay: 0.35s; }
+  .family-box { animation-delay: 0.40s; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="farm-icon">🌾</span>
+    <h1>Animal World</h1>
+    <p class="subtitle">📚 Guia de Estudo • Inglês 3º Ano</p>
+    <div class="test-info">📅 Prova: 06/05 (Quarta-feira)</div>
+  </div>
+
+  <!-- BOAS-VINDAS -->
+  <div class="welcome">
+    <div class="char">🐮</div>
+    <div class="msg">
+      <strong>Olá! Eu sou a Tilly, a vaquinha! 🐮</strong><br>
+      Vou te ajudar a estudar para a prova de inglês! Aqui você tem 4 materiais. Faz na ordem que eu vou mostrar e tudo vai ficar fácil! 🌟
+    </div>
+  </div>
+
+  <!-- O QUE CAI NA PROVA -->
+  <div class="topics-card">
+    <h2>📋 O que cai na prova:</h2>
+    <ul class="topic-list">
+      <li><span class="ti">🐄</span><span>Animais da fazenda (sheep, cow, etc.)</span></li>
+      <li><span class="ti">🦋</span><span>Insetos (butterfly, ant, ladybug...)</span></li>
+      <li><span class="ti">🐾</span><span>Cobertura do corpo (fur, scales...)</span></li>
+      <li><span class="ti">📖</span><span>"This is a..." e "These are..."</span></li>
+      <li><span class="ti">📚</span><span>Student's Book: páginas 32, 34 e 36</span></li>
+      <li><span class="ti">📓</span><span>Workbook: páginas 20, 21 e 24</span></li>
+    </ul>
+  </div>
+
+  <!-- TÍTULO DOS MATERIAIS -->
+  <h2 class="section-title">🎯 Seus 4 Materiais de Estudo</h2>
+
+  <!-- MATERIAIS -->
+  <div class="materials">
+
+    <a href="resumo_ingles_3ano.html" class="material-card m1">
+      <span class="step-num">1</span>
+      <span class="icon-big">📚</span>
+      <h3>Resumo Interativo</h3>
+      <p>Toda a matéria explicada com áudio em inglês 🔊. Clique em qualquer palavra para ouvir!</p>
+      <span class="tag">⭐ COMECE POR AQUI</span>
+    </a>
+
+    <a href="leitura_guiada_ingles_3ano.html" class="material-card m2">
+      <span class="step-num">2</span>
+      <span class="icon-big">📖</span>
+      <h3>Leitura Guiada</h3>
+      <p>Diálogos da apostila com áudio + exercícios para completar. Aprenda lendo!</p>
+      <span class="tag">📖 LEIA E PRATIQUE</span>
+    </a>
+
+    <a href="quiz_ingles_3ano.html" class="material-card m3">
+      <span class="step-num">3</span>
+      <span class="icon-big">🎯</span>
+      <h3>Quiz Rápido</h3>
+      <p>10 perguntas curtinhas para ver se você lembra das palavras. Tem áudio também!</p>
+      <span class="tag">⚡ TREINO RÁPIDO</span>
+    </a>
+
+    <a href="simulado_ingles_3ano.html" class="material-card m4">
+      <span class="step-num">4</span>
+      <span class="icon-big">📝</span>
+      <h3>Simulado Completo</h3>
+      <p>20 questões com cara de prova! Placar, barra de progresso e resultado no final.</p>
+      <span class="tag">🏆 PROVA DE VERDADE</span>
+    </a>
+
+  </div>
+
+  <!-- TRILHA DE ESTUDO -->
+  <div class="trail">
+    <h2>🗺️ Trilha de Estudo Recomendada</h2>
+    <div class="trail-steps">
+      <div class="trail-step">
+        <div class="step-circle">1</div>
+        <div class="step-text">
+          Veja o <strong>Resumo</strong> e ouça o áudio das palavras
+          <small>⏱️ Cerca de 15 minutos</small>
+        </div>
+      </div>
+      <div class="trail-step">
+        <div class="step-circle">2</div>
+        <div class="step-text">
+          Leia os diálogos na <strong>Leitura Guiada</strong> e faça os exercícios
+          <small>⏱️ Cerca de 10 minutos</small>
+        </div>
+      </div>
+      <div class="trail-step">
+        <div class="step-circle">3</div>
+        <div class="step-text">
+          Faça o <strong>Quiz</strong> para testar o que aprendeu
+          <small>⏱️ Cerca de 5 minutos</small>
+        </div>
+      </div>
+      <div class="trail-step">
+        <div class="step-circle">4</div>
+        <div class="step-text">
+          Termine com o <strong>Simulado</strong> para sentir como será a prova!
+          <small>⏱️ Cerca de 15 minutos</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DICAS PARA A FAMÍLIA -->
+  <div class="family-box">
+    <h2>💛 Dicas para a Família</h2>
+    <ul>
+      <li>Sente perto e ouça o áudio junto. A repetição ajuda muito a fixar a pronúncia!</li>
+      <li>Em cada palavra nova, peça para a criança repetir o que ouviu em voz alta.</li>
+      <li>Se errar uma questão, volte ao Resumo e ouça aquela palavra de novo.</li>
+      <li>Não precisa fazer tudo de uma vez! Quebre em 2 ou 3 sessões pequenas.</li>
+      <li>Comemore cada acerto! Crianças aprendem melhor quando se sentem felizes. 🌟</li>
+    </ul>
+  </div>
+
+</div>
+
+</body>
+</html>

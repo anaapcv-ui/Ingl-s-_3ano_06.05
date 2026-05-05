@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumo Interativo – Animal World 🐮</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde-fazenda: #7CB342;
+    --verde-claro: #C5E1A5;
+    --amarelo: #FFD54F;
+    --laranja: #FF8A65;
+    --rosa: #F48FB1;
+    --azul-ceu: #81D4FA;
+    --marrom: #8D6E63;
+    --branco: #FFFFFF;
+    --texto: #3E2723;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background:
+      linear-gradient(180deg, #87CEEB 0%, #B3E5FC 40%, #C5E1A5 65%, #AED581 100%);
+    min-height: 100vh;
+    color: var(--texto);
+    padding-bottom: 40px;
+    overflow-x: hidden;
+  }
+
+  /* NUVENS DECORATIVAS */
+  body::before {
+    content: '☁️ ☁️       ☁️';
+    position: fixed;
+    top: 8%;
+    left: 0;
+    width: 100%;
+    font-size: 2rem;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+    animation: drift 30s linear infinite;
+  }
+
+  @keyframes drift {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
+
+  .wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #FFB74D, #FF8A65);
+    border-radius: 28px;
+    padding: 24px 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    border: 4px solid white;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .header .farm-emojis {
+    font-size: 2.5rem;
+    margin-bottom: 6px;
+    animation: bounce 2s ease infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    text-shadow: 2px 3px 0 rgba(0,0,0,0.2);
+    line-height: 1.1;
+  }
+
+  .header p {
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin-top: 6px;
+    opacity: 0.95;
+  }
+
+  .header .badges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    background: rgba(255,255,255,0.25);
+    border: 2px solid white;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  /* PERSONAGEM GUIA */
+  .guide {
+    background: white;
+    border: 4px dashed var(--laranja);
+    border-radius: 22px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+
+  .guide .char {
+    font-size: 3rem;
+    flex-shrink: 0;
+    animation: wiggle 3s ease infinite;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  .guide .speech {
+    background: #FFF8E1;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--texto);
+    line-height: 1.4;
+    position: relative;
+  }
+
+  /* SEÇÃO */
+  .section {
+    background: white;
+    border-radius: 24px;
+    padding: 20px 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    border-top: 6px solid;
+    position: relative;
+  }
+
+  .section.s-farm { border-color: #7CB342; }
+  .section.s-insects { border-color: #FF8A65; }
+  .section.s-grammar { border-color: #5C6BC0; }
+  .section.s-body { border-color: #AB47BC; }
+
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.1;
+  }
+
+  .s-farm .section-title { color: #558B2F; }
+  .s-insects .section-title { color: #E64A19; }
+  .s-grammar .section-title { color: #3949AB; }
+  .s-body .section-title { color: #8E24AA; }
+
+  .section-title .ico {
+    font-size: 1.8rem;
+  }
+
+  /* CARDS DE VOCABULÁRIO (FIXOS, NUNCA FLIP) */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  @media (min-width: 600px) {
+    .vocab-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .vocab-card {
+    background: linear-gradient(155deg, #FFF8E1, #FFECB3);
+    border: 3px solid #FFD54F;
+    border-radius: 18px;
+    padding: 14px 10px 12px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .vocab-card.farm { background: linear-gradient(155deg, #DCEDC8, #C5E1A5); border-color: #8BC34A; }
+  .vocab-card.bug { background: linear-gradient(155deg, #FFCCBC, #FFAB91); border-color: #FF7043; }
+  .vocab-card.body { background: linear-gradient(155deg, #E1BEE7, #CE93D8); border-color: #AB47BC; }
+
+  .vocab-card:hover {
+    transform: translateY(-4px) rotate(-1deg);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .vocab-emoji {
+    font-size: 2.6rem;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .vocab-en {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.15rem;
+    color: var(--texto);
+    margin-bottom: 2px;
+    line-height: 1.1;
+  }
+
+  .vocab-pt {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #5D4037;
+    opacity: 0.85;
+    margin-bottom: 8px;
+  }
+
+  /* BOTÃO DE ÁUDIO */
+  .audio-btn {
+    background: linear-gradient(135deg, #FF6F00, #FF8F00);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255,111,0,0.4);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .audio-btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 6px 16px rgba(255,111,0,0.5);
+  }
+
+  .audio-btn:active { transform: scale(0.95); }
+
+  .audio-btn.playing {
+    animation: pulse 0.8s ease infinite;
+    background: linear-gradient(135deg, #00C853, #64DD17);
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  /* CAIXAS DE GRAMÁTICA */
+  .grammar-box {
+    background: linear-gradient(135deg, #E8EAF6, #C5CAE9);
+    border: 3px solid #5C6BC0;
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+
+  .grammar-box h4 {
+    font-family: 'Fredoka One', cursive;
+    color: #283593;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+
+  .grammar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 10px 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+
+  .grammar-row .en {
+    font-weight: 900;
+    color: #283593;
+    flex: 1;
+  }
+
+  .grammar-row .arrow {
+    color: #FF8A65;
+    font-weight: 900;
+  }
+
+  .grammar-row .pt {
+    color: #555;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  /* TIP / DICA */
+  .tip {
+    background: linear-gradient(135deg, #FFF59D, #FFEB3B);
+    border-left: 6px solid #F57F17;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: #5D4037;
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .tip .tip-ico {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  /* TABELA DE COMPARAÇÃO PERTO/LONGE */
+  .compare-table {
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    margin: 12px 0;
+    border: 3px solid #5C6BC0;
+  }
+
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 2px solid #E8EAF6;
+  }
+
+  .compare-row:last-child { border-bottom: none; }
+
+  .compare-row.head {
+    background: #5C6BC0;
+    color: white;
+  }
+
+  .compare-cell {
+    padding: 10px 12px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    text-align: center;
+  }
+
+  .compare-cell.left { border-right: 2px solid #E8EAF6; }
+  .compare-row.head .compare-cell { color: white; font-family: 'Fredoka One', cursive; font-size: 0.95rem; }
+
+  /* RESUMÃO FINAL */
+  .resumao {
+    background: linear-gradient(135deg, #FFE082, #FFD54F);
+    border: 4px solid #F57F17;
+    border-radius: 24px;
+    padding: 20px 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(245,127,23,0.3);
+  }
+
+  .resumao h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #BF360C;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    text-align: center;
+    text-shadow: 1px 2px 0 rgba(255,255,255,0.5);
+  }
+
+  .key-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .key-word {
+    background: white;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: #5D4037;
+    border: 2px solid #FF8F00;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  /* ANIMAÇÃO ENTRADA */
+  .section, .resumao, .guide {
+    animation: slideUp 0.5s ease backwards;
+  }
+  .guide { animation-delay: 0.05s; }
+  .section:nth-of-type(1) { animation-delay: 0.1s; }
+  .section:nth-of-type(2) { animation-delay: 0.2s; }
+  .section:nth-of-type(3) { animation-delay: 0.3s; }
+  .section:nth-of-type(4) { animation-delay: 0.4s; }
+  .resumao { animation-delay: 0.5s; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="farm-emojis">🐄 🐑 🐔 🦋</div>
+    <h1>Animal World 🌾</h1>
+    <p>Inglês • 3º Ano • Unit 3</p>
+    <div class="badges">
+      <span class="badge">🔊 Com Áudio</span>
+      <span class="badge">📚 Resumo Total</span>
+      <span class="badge">⭐ Para a Prova</span>
+    </div>
+  </div>
+
+  <!-- PERSONAGEM GUIA: TILLY, A VAQUINHA -->
+  <div class="guide">
+    <div class="char">🐮</div>
+    <div class="speech">
+      <strong>Olá! Eu sou a Tilly!</strong> 🐮 Vou te mostrar todos os animais e palavras importantes para a prova. Aperte o botão 🔊 para ouvir como falar em inglês!
+    </div>
+  </div>
+
+  <!-- 🐄 SEÇÃO 1: ANIMAIS DA FAZENDA -->
+  <div class="section s-farm">
+    <h2 class="section-title"><span class="ico">🚜</span>Farm Animals (Animais da Fazenda)</h2>
+    <p style="font-weight:700;color:#558B2F;font-size:0.92rem;line-height:1.5">
+      Estes são os <strong>6 animais da fazenda</strong> que mais caem na prova! Aperte 🔊 e ouça a pronúncia!
+    </p>
+
+    <div class="vocab-grid">
+      <div class="vocab-card farm">
+        <span class="vocab-emoji">🐑</span>
+        <div class="vocab-en">sheep</div>
+        <div class="vocab-pt">ovelha</div>
+        <button class="audio-btn" onclick="speak('sheep', this)">🔊</button>
+      </div>
+      <div class="vocab-card farm">
+        <span class="vocab-emoji">🐔</span>
+        <div class="vocab-en">chicken</div>
+        <div class="vocab-pt">galinha</div>
+        <button class="audio-btn" onclick="speak('chicken', this)">🔊</button>
+      </div>
+      <div class="vocab-card farm">
+        <span class="vocab-emoji">🫏</span>
+        <div class="vocab-en">donkey</div>
+        <div class="vocab-pt">burro</div>
+        <button class="audio-btn" onclick="speak('donkey', this)">🔊</button>
+      </div>
+      <div class="vocab-card farm">
+        <span class="vocab-emoji">🦆</span>
+        <div class="vocab-en">duck</div>
+        <div class="vocab-pt">pato</div>
+        <button class="audio-btn" onclick="speak('duck', this)">🔊</button>
+      </div>
+      <div class="vocab-card farm">
+        <span class="vocab-emoji">🐐</span>
+        <div class="vocab-en">goat</div>
+        <div class="vocab-pt">cabra</div>
+        <button class="audio-btn" onclick="speak('goat', this)">🔊</button>
+      </div>
+      <div class="vocab-card farm">
+        <span class="vocab-emoji">🐄</span>
+        <div class="vocab-en">cow</div>
+        <div class="vocab-pt">vaca</div>
+        <button class="audio-btn" onclick="speak('cow', this)">🔊</button>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-ico">💡</span>
+      <div><strong>DICA DE OURO:</strong> "duck" parece com o som que o pato faz "quack quack" 🦆 — fica fácil de lembrar!</div>
+    </div>
+  </div>
+
+  <!-- 🐛 SEÇÃO 2: INSETOS -->
+  <div class="section s-insects">
+    <h2 class="section-title"><span class="ico">🦋</span>Insects (Insetos)</h2>
+    <p style="font-weight:700;color:#E64A19;font-size:0.92rem;line-height:1.5">
+      Os <strong>6 insetos</strong> da Lesson 5! Toque no 🔊 de cada um!
+    </p>
+
+    <div class="vocab-grid">
+      <div class="vocab-card bug">
+        <span class="vocab-emoji">🐞</span>
+        <div class="vocab-en">ladybug</div>
+        <div class="vocab-pt">joaninha</div>
+        <button class="audio-btn" onclick="speak('ladybug', this)">🔊</button>
+      </div>
+      <div class="vocab-card bug">
+        <span class="vocab-emoji">🦗</span>
+        <div class="vocab-en">grasshopper</div>
+        <div class="vocab-pt">gafanhoto</div>
+        <button class="audio-btn" onclick="speak('grasshopper', this)">🔊</button>
+      </div>
+      <div class="vocab-card bug">
+        <span class="vocab-emoji">🐛</span>
+        <div class="vocab-en">caterpillar</div>
+        <div class="vocab-pt">lagarta</div>
+        <button class="audio-btn" onclick="speak('caterpillar', this)">🔊</button>
+      </div>
+      <div class="vocab-card bug">
+        <span class="vocab-emoji">🦟</span>
+        <div class="vocab-en">mosquito</div>
+        <div class="vocab-pt">mosquito</div>
+        <button class="audio-btn" onclick="speak('mosquito', this)">🔊</button>
+      </div>
+      <div class="vocab-card bug">
+        <span class="vocab-emoji">🦋</span>
+        <div class="vocab-en">butterfly</div>
+        <div class="vocab-pt">borboleta</div>
+        <button class="audio-btn" onclick="speak('butterfly', this)">🔊</button>
+      </div>
+      <div class="vocab-card bug">
+        <span class="vocab-emoji">🐜</span>
+        <div class="vocab-en">ant</div>
+        <div class="vocab-pt">formiga</div>
+        <button class="audio-btn" onclick="speak('ant', this)">🔊</button>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-ico">⚠️</span>
+      <div><strong>ATENÇÃO:</strong> Antes de "ant" e palavras que começam com vogal, usamos <strong>"an"</strong> em vez de "a" → "<strong>an</strong> ant" (uma formiga). Mas para os outros: "<strong>a</strong> ladybug", "<strong>a</strong> butterfly".</div>
+    </div>
+  </div>
+
+  <!-- 📚 SEÇÃO 3: GRAMÁTICA This/That + These/Those -->
+  <div class="section s-grammar">
+    <h2 class="section-title"><span class="ico">📖</span>This / That / These / Those</h2>
+    <p style="font-weight:700;color:#3949AB;font-size:0.92rem;line-height:1.5">
+      Esta é a <strong>regra mais importante da prova!</strong> Mostra se o animal está <strong>perto</strong> ou <strong>longe</strong>, e se é <strong>1</strong> ou <strong>vários</strong>.
+    </p>
+
+    <div class="compare-table">
+      <div class="compare-row head">
+        <div class="compare-cell left">📍 PERTO</div>
+        <div class="compare-cell">🔭 LONGE</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell left"><strong>This is</strong> a cow.<br><small>(Esta é uma vaca)</small></div>
+        <div class="compare-cell"><strong>That's</strong> a cow.<br><small>(Aquela é uma vaca)</small></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell left"><strong>These are</strong> goats.<br><small>(Estas são cabras)</small></div>
+        <div class="compare-cell"><strong>Those are</strong> goats.<br><small>(Aquelas são cabras)</small></div>
+      </div>
+    </div>
+
+    <div class="grammar-box">
+      <h4>🔊 Ouça as 4 frases-modelo:</h4>
+      <div class="grammar-row">
+        <span class="en">This is a duck.</span>
+        <button class="audio-btn" onclick="speak('This is a duck', this)">🔊</button>
+      </div>
+      <div class="grammar-row">
+        <span class="en">That's a cow.</span>
+        <button class="audio-btn" onclick="speak('That is a cow', this)">🔊</button>
+      </div>
+      <div class="grammar-row">
+        <span class="en">These are goats.</span>
+        <button class="audio-btn" onclick="speak('These are goats', this)">🔊</button>
+      </div>
+      <div class="grammar-row">
+        <span class="en">Those are chickens.</span>
+        <button class="audio-btn" onclick="speak('Those are chickens', this)">🔊</button>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-ico">🎯</span>
+      <div><strong>TRUQUE:</strong> Se o animal é <strong>1 só</strong> → "This/That". Se são <strong>vários</strong> → "These/Those". Se está <strong>aqui pertinho</strong> → "This/These". Se está <strong>longe</strong> → "That/Those".</div>
+    </div>
+
+    <h4 style="font-family:'Fredoka One',cursive;color:#3949AB;margin-top:14px;font-size:1.05rem">❓ Perguntas e Respostas</h4>
+    <div class="grammar-box">
+      <div class="grammar-row">
+        <span class="en">What's this? → It's a caterpillar.</span>
+        <button class="audio-btn" onclick="speak('What is this? It is a caterpillar', this)">🔊</button>
+      </div>
+      <div class="grammar-row">
+        <span class="en">What's that? → It's an ant.</span>
+        <button class="audio-btn" onclick="speak('What is that? It is an ant', this)">🔊</button>
+      </div>
+      <div class="grammar-row">
+        <span class="en">What are these? → They're grasshoppers.</span>
+        <button class="audio-btn" onclick="speak('What are these? They are grasshoppers', this)">🔊</button>
+      </div>
+      <div class="grammar-row">
+        <span class="en">What are those? → They're mosquitoes.</span>
+        <button class="audio-btn" onclick="speak('What are those? They are mosquitoes', this)">🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🦴 SEÇÃO 4: COBERTURA DO CORPO -->
+  <div class="section s-body">
+    <h2 class="section-title"><span class="ico">🐾</span>Body Covering (Cobertura do Corpo)</h2>
+    <p style="font-weight:700;color:#8E24AA;font-size:0.92rem;line-height:1.5">
+      Cada animal tem uma <strong>cobertura diferente</strong> no corpo. Veja qual animal tem qual:
+    </p>
+
+    <div class="vocab-grid">
+      <div class="vocab-card body">
+        <span class="vocab-emoji">🐶</span>
+        <div class="vocab-en">fur</div>
+        <div class="vocab-pt">pelo</div>
+        <button class="audio-btn" onclick="speak('fur', this)">🔊</button>
+      </div>
+      <div class="vocab-card body">
+        <span class="vocab-emoji">🐍</span>
+        <div class="vocab-en">scales</div>
+        <div class="vocab-pt">escamas</div>
+        <button class="audio-btn" onclick="speak('scales', this)">🔊</button>
+      </div>
+      <div class="vocab-card body">
+        <span class="vocab-emoji">🦜</span>
+        <div class="vocab-en">feathers</div>
+        <div class="vocab-pt">penas</div>
+        <button class="audio-btn" onclick="speak('feathers', this)">🔊</button>
+      </div>
+      <div class="vocab-card body">
+        <span class="vocab-emoji">🐢</span>
+        <div class="vocab-en">shell</div>
+        <div class="vocab-pt">casco</div>
+        <button class="audio-btn" onclick="speak('shell', this)">🔊</button>
+      </div>
+    </div>
+
+    <div class="grammar-box" style="background:linear-gradient(135deg,#F3E5F5,#E1BEE7);border-color:#8E24AA">
+      <h4 style="color:#6A1B9A">🐾 Como dizer (frase-modelo):</h4>
+      <div class="grammar-row">
+        <span class="en">They have fur. <small>(cães, gatos)</small></span>
+        <button class="audio-btn" onclick="speak('They have fur', this)">🔊</button>
+      </div>
+      <div class="grammar-row">
+        <span class="en">They have scales. <small>(cobras, peixes)</small></span>
+        <button class="audio-btn" onclick="speak('They have scales', this)">🔊</button>
+      </div>
+      <div class="grammar-row">
+        <span class="en">They have feathers. <small>(galinhas, pássaros)</small></span>
+        <button class="audio-btn" onclick="speak('They have feathers', this)">🔊</button>
+      </div>
+      <div class="grammar-row">
+        <span class="en">They have a shell. <small>(tartarugas)</small></span>
+        <button class="audio-btn" onclick="speak('They have a shell', this)">🔊</button>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-ico">🌟</span>
+      <div><strong>ASSOCIAÇÃO ESPERTA:</strong> 🐕 cachorro → <strong>fur</strong> | 🐍 cobra → <strong>scales</strong> | 🐔 galinha → <strong>feathers</strong> | 🐢 tartaruga → <strong>shell</strong></div>
+    </div>
+  </div>
+
+  <!-- 🌟 RESUMÃO FINAL -->
+  <div class="resumao">
+    <h2>🌟 Resumão da Prova 🌟</h2>
+    <p style="text-align:center;font-weight:800;color:#5D4037;font-size:0.92rem;margin-bottom:8px">
+      Palavras-chave para revisar antes da prova:
+    </p>
+
+    <h4 style="color:#BF360C;font-family:'Fredoka One',cursive;margin-top:12px;margin-bottom:6px">🐮 Farm Animals</h4>
+    <div class="key-words">
+      <span class="key-word">🐑 sheep</span>
+      <span class="key-word">🐔 chicken</span>
+      <span class="key-word">🫏 donkey</span>
+      <span class="key-word">🦆 duck</span>
+      <span class="key-word">🐐 goat</span>
+      <span class="key-word">🐄 cow</span>
+    </div>
+
+    <h4 style="color:#BF360C;font-family:'Fredoka One',cursive;margin-top:12px;margin-bottom:6px">🦋 Insects</h4>
+    <div class="key-words">
+      <span class="key-word">🐞 ladybug</span>
+      <span class="key-word">🦗 grasshopper</span>
+      <span class="key-word">🐛 caterpillar</span>
+      <span class="key-word">🦟 mosquito</span>
+      <span class="key-word">🦋 butterfly</span>
+      <span class="key-word">🐜 ant</span>
+    </div>
+
+    <h4 style="color:#BF360C;font-family:'Fredoka One',cursive;margin-top:12px;margin-bottom:6px">🐾 Body Covering</h4>
+    <div class="key-words">
+      <span class="key-word">fur</span>
+      <span class="key-word">scales</span>
+      <span class="key-word">feathers</span>
+      <span class="key-word">shell</span>
+    </div>
+
+    <h4 style="color:#BF360C;font-family:'Fredoka One',cursive;margin-top:12px;margin-bottom:6px">📖 Frases-Modelo</h4>
+    <div class="key-words">
+      <span class="key-word">This is a... (1, perto)</span>
+      <span class="key-word">That's a... (1, longe)</span>
+      <span class="key-word">These are... (vários, perto)</span>
+      <span class="key-word">Those are... (vários, longe)</span>
+    </div>
+
+    <p style="text-align:center;font-weight:900;color:#BF360C;margin-top:14px;font-size:1rem">
+      🐮 Boa prova! Você consegue! 🌟
+    </p>
+  </div>
+
+</div>
+
+<script>
+  // Web Speech API - Configuração Inglês
+  function speak(text, btn) {
+    if (!('speechSynthesis' in window)) {
+      alert('Seu navegador não suporta áudio. Tente no Chrome ou Safari!');
+      return;
+    }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = 0.82;
+    u.pitch = 1;
+
+    if (btn) {
+      btn.classList.add('playing');
+      u.onend = () => btn.classList.remove('playing');
+      u.onerror = () => btn.classList.remove('playing');
+    }
+
+    speechSynthesis.speak(u);
+  }
+
+  // Pré-carregar vozes
+  if ('speechSynthesis' in window) {
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+  }
+</script>
+
+</body>
+</html>

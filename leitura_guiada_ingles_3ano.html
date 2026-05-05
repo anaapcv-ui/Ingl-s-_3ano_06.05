@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leitura Guiada – Animal World 📖</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul: #5C6BC0;
+    --rosa: #F48FB1;
+    --verde: #66BB6A;
+    --laranja: #FF8A65;
+    --amarelo: #FFD54F;
+    --texto: #3E2723;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #FFF3E0 0%, #FFE0B2 50%, #FFCCBC 100%);
+    min-height: 100vh;
+    color: var(--texto);
+    padding: 16px 12px 60px;
+  }
+
+  .wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #AB47BC, #8E24AA);
+    color: white;
+    border-radius: 28px;
+    padding: 22px 18px;
+    text-align: center;
+    box-shadow: 0 8px 28px rgba(142,36,170,0.35);
+    border: 4px solid white;
+    margin-bottom: 18px;
+  }
+
+  .header .book {
+    font-size: 3.2rem;
+    animation: bookFloat 3s ease infinite;
+    display: inline-block;
+  }
+
+  @keyframes bookFloat {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-10px) rotate(3deg); }
+  }
+
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    text-shadow: 2px 3px 0 rgba(0,0,0,0.2);
+    line-height: 1.1;
+  }
+
+  .header p {
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin-top: 6px;
+    opacity: 0.95;
+  }
+
+  /* PERSONAGEM GUIA */
+  .guide {
+    background: white;
+    border: 4px dashed var(--rosa);
+    border-radius: 22px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+
+  .guide .char {
+    font-size: 3rem;
+    flex-shrink: 0;
+    animation: wiggle 3s ease infinite;
+  }
+
+  @keyframes wiggle {
+    0%,100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  .guide .speech {
+    background: #FCE4EC;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    line-height: 1.4;
+  }
+
+  /* SEÇÃO DIALOGO */
+  .dialog-section {
+    background: white;
+    border-radius: 24px;
+    padding: 20px 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    border-top: 6px solid var(--azul);
+    animation: slideUp 0.5s ease backwards;
+  }
+
+  .dialog-section:nth-child(2) { animation-delay: 0.1s; }
+  .dialog-section:nth-child(3) { animation-delay: 0.2s; }
+  .dialog-section:nth-child(4) { animation-delay: 0.3s; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dialog-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    color: #283593;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* CENA - HISTÓRIA */
+  .scene {
+    background: linear-gradient(180deg, #B3E5FC 0%, #81D4FA 60%, #C5E1A5 60%, #AED581 100%);
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 14px;
+    border: 3px solid #5C6BC0;
+    position: relative;
+  }
+
+  .scene-label {
+    background: white;
+    color: #283593;
+    font-family: 'Fredoka One', cursive;
+    padding: 4px 14px;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .characters-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .character {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .character:hover { transform: scale(1.1); }
+
+  .character .icon {
+    font-size: 3.5rem;
+    display: block;
+  }
+
+  .character .name {
+    background: white;
+    padding: 3px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #283593;
+    margin-top: 4px;
+    border: 2px solid #5C6BC0;
+  }
+
+  /* BALÕES DE FALA */
+  .speech-bubble {
+    background: white;
+    border: 3px solid;
+    border-radius: 16px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    position: relative;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--texto);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .speech-bubble.boy { border-color: #29B6F6; background: #E1F5FE; }
+  .speech-bubble.girl { border-color: #EC407A; background: #FCE4EC; }
+  .speech-bubble.tio { border-color: #66BB6A; background: #E8F5E9; }
+
+  .speech-bubble .who {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .speech-bubble .text {
+    flex: 1;
+    line-height: 1.4;
+  }
+
+  .speech-bubble .text small {
+    display: block;
+    font-weight: 700;
+    color: #777;
+    font-size: 0.78rem;
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  .speech-bubble .play-btn {
+    background: linear-gradient(135deg, #FF6F00, #FF8F00);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(255,111,0,0.3);
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .speech-bubble .play-btn:hover { transform: scale(1.15); }
+  .speech-bubble .play-btn.playing {
+    background: linear-gradient(135deg, #00C853, #64DD17);
+    animation: pulseB 0.8s infinite;
+  }
+
+  @keyframes pulseB {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  /* BOTÃO OUVIR TUDO */
+  .play-all-btn {
+    background: linear-gradient(135deg, #5C6BC0, #3949AB);
+    color: white;
+    border: 3px solid white;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(57,73,171,0.4);
+    margin-bottom: 12px;
+    width: 100%;
+    transition: all 0.2s;
+  }
+
+  .play-all-btn:hover { transform: translateY(-2px); }
+
+  /* ATIVIDADE */
+  .activity {
+    background: linear-gradient(155deg, #FFF8E1, #FFECB3);
+    border: 3px solid #FFB300;
+    border-radius: 18px;
+    padding: 16px;
+    margin-top: 14px;
+  }
+
+  .activity-title {
+    font-family: 'Fredoka One', cursive;
+    color: #BF360C;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .blanks-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+  }
+
+  .blank-input {
+    border: 2.5px dashed #FF8A65;
+    background: white;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    width: 130px;
+    text-align: center;
+    color: #BF360C;
+    transition: all 0.2s;
+  }
+
+  .blank-input:focus {
+    outline: none;
+    border-color: #43A047;
+    box-shadow: 0 0 0 3px rgba(67,160,71,0.2);
+  }
+
+  .blank-input.right {
+    background: #C8E6C9;
+    border-color: #43A047;
+    border-style: solid;
+    color: #1B5E20;
+  }
+
+  .blank-input.wrong-i {
+    background: #FFCDD2;
+    border-color: #C62828;
+    color: #B71C1C;
+  }
+
+  .check-btn {
+    background: linear-gradient(135deg, #43A047, #66BB6A);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50px;
+    padding: 8px 18px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(67,160,71,0.3);
+    transition: all 0.2s;
+  }
+
+  .check-btn:hover { transform: translateY(-2px); }
+
+  .activity-fb {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    display: none;
+  }
+
+  .activity-fb.show { display: block; animation: fadeIn 0.3s; }
+  .activity-fb.success { background: #E8F5E9; border: 2px solid #81C784; color: #1B5E20; }
+  .activity-fb.fail { background: #FFF3E0; border: 2px solid #FFB74D; color: #BF360C; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* MOSTRAR RESPOSTA */
+  .show-answer {
+    background: white;
+    border: 2px dashed #5C6BC0;
+    color: #283593;
+    border-radius: 50px;
+    padding: 6px 14px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 8px;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+
+  .show-answer:hover { background: #E8EAF6; }
+
+  /* GLOSSARY */
+  .glossary {
+    background: linear-gradient(155deg, #E1F5FE, #B3E5FC);
+    border: 3px solid #29B6F6;
+    border-radius: 18px;
+    padding: 16px;
+    margin-top: 14px;
+  }
+
+  .glossary h4 {
+    font-family: 'Fredoka One', cursive;
+    color: #01579B;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
+
+  .gloss-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  @media (min-width: 600px) {
+    .gloss-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .gloss-item {
+    background: white;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 2px solid #B3E5FC;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+
+  .gloss-item:hover { transform: translateY(-3px); }
+
+  .gloss-item .gw {
+    font-family: 'Fredoka One', cursive;
+    color: #01579B;
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .gloss-item .gp {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #5D4037;
+    margin: 2px 0 6px;
+  }
+
+  .gloss-item .play-btn-mini {
+    background: #FF8A65;
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(255,138,101,0.4);
+  }
+
+  /* FINAL */
+  .final-msg {
+    background: linear-gradient(135deg, #FFD54F, #FFB300);
+    border: 4px solid white;
+    border-radius: 24px;
+    padding: 22px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(255,179,0,0.35);
+    margin-top: 18px;
+  }
+
+  .final-msg h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #BF360C;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+
+  .final-msg p {
+    font-weight: 800;
+    color: #5D4037;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="book">📖</span>
+    <h1>Leitura Guiada<br>Animal World</h1>
+    <p>Diálogos da apostila + atividades</p>
+  </div>
+
+  <!-- PERSONAGEM GUIA -->
+  <div class="guide">
+    <div class="char">🐮</div>
+    <div class="speech">
+      <strong>Oi!</strong> Vamos ler junto os diálogos da Unit 3? Toque no 🔊 para ouvir cada fala em inglês. Depois faça os exercícios! 📚🌟
+    </div>
+  </div>
+
+  <!-- DIÁLOGO 1: SAFARI (Lesson 2) -->
+  <div class="dialog-section">
+    <h2 class="dialog-title">🦁 Diálogo 1 — Safari na África</h2>
+    <p style="font-size:0.9rem;font-weight:700;color:#555;margin-bottom:12px;line-height:1.5">
+      Um menino, um urso e um elefante estão num safari. Vamos ler o que cada um diz!
+    </p>
+
+    <div class="scene">
+      <span class="scene-label">📍 Cena: Safari</span>
+      <div class="characters-row">
+        <div class="character" onclick="speak('boy', this.querySelector('.icon'))">
+          <span class="icon">👦</span>
+          <span class="name">Menino</span>
+        </div>
+        <div class="character" onclick="speak('elephant', this.querySelector('.icon'))">
+          <span class="icon">🐘</span>
+          <span class="name">Elefante</span>
+        </div>
+        <div class="character" onclick="speak('bear', this.querySelector('.icon'))">
+          <span class="icon">🐻</span>
+          <span class="name">Urso</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="play-all-btn" onclick="playAll(['That is a goat','Those are cows','This is an elephant','These are chickens'], this)">
+      ▶️ Ouvir o diálogo todo
+    </button>
+
+    <div class="speech-bubble boy">
+      <span class="who">👦</span>
+      <span class="text">
+        That's a goat.
+        <small>(Aquela é uma cabra — apontando para longe)</small>
+      </span>
+      <button class="play-btn" onclick="speak('That is a goat', this)">🔊</button>
+    </div>
+
+    <div class="speech-bubble boy">
+      <span class="who">👦</span>
+      <span class="text">
+        Those are cows.
+        <small>(Aquelas são vacas — várias e longe)</small>
+      </span>
+      <button class="play-btn" onclick="speak('Those are cows', this)">🔊</button>
+    </div>
+
+    <div class="speech-bubble tio">
+      <span class="who">🐻</span>
+      <span class="text">
+        This is an elephant.
+        <small>(Este é um elefante — bem perto!)</small>
+      </span>
+      <button class="play-btn" onclick="speak('This is an elephant', this)">🔊</button>
+    </div>
+
+    <div class="speech-bubble tio">
+      <span class="who">🐻</span>
+      <span class="text">
+        These are chickens.
+        <small>(Estas são galinhas — várias e perto)</small>
+      </span>
+      <button class="play-btn" onclick="speak('These are chickens', this)">🔊</button>
+    </div>
+
+    <!-- ATIVIDADE 1 -->
+    <div class="activity">
+      <div class="activity-title">✏️ Sua vez! Complete:</div>
+      <div class="blanks-row">
+        <span>1.</span>
+        <input type="text" class="blank-input" id="b1a" placeholder="This/That">
+        <span>'s a goat.</span>
+        <span style="color:#888;font-size:0.85rem">(1 cabra, longe)</span>
+      </div>
+      <div class="blanks-row">
+        <span>2.</span>
+        <input type="text" class="blank-input" id="b1b" placeholder="These/Those">
+        <span>are cows.</span>
+        <span style="color:#888;font-size:0.85rem">(várias vacas, longe)</span>
+      </div>
+      <div class="blanks-row">
+        <span>3.</span>
+        <span>This is</span>
+        <input type="text" class="blank-input" id="b1c" placeholder="a/an">
+        <span>elephant.</span>
+        <span style="color:#888;font-size:0.85rem">(começa com vogal!)</span>
+      </div>
+      <button class="check-btn" onclick="checkAct1()">✅ Conferir</button>
+      <div class="activity-fb" id="fb1"></div>
+      <button class="show-answer" onclick="showAnswer('ans1')">👁️ Ver respostas</button>
+      <div id="ans1" style="display:none;margin-top:10px;font-weight:800;color:#283593;font-size:0.88rem">
+        ✓ <strong>That</strong>'s a goat | <strong>Those</strong> are cows | This is <strong>an</strong> elephant
+      </div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO 2: SONG ITCHY OUCHY MOSQUITO (Lesson 6) -->
+  <div class="dialog-section">
+    <h2 class="dialog-title">🦟 Diálogo 2 — A música do Mosquito</h2>
+    <p style="font-size:0.9rem;font-weight:700;color:#555;margin-bottom:12px;line-height:1.5">
+      Esta é a música "Itchy, Ouchy Mosquito" da Lesson 6. Vamos ler junto!
+    </p>
+
+    <button class="play-all-btn" onclick="playAll(['What are these? What are these? They are green grasshoppers','What are those? What are those? They are curly caterpillars','What is that? What is that? It is a shiny black cat','And what is this? Oh! Ouch! Stop! Oh, no! It is an itchy, ouchy, itchy, ouchy mosquito'], this)">
+      ▶️ Ouvir a música toda
+    </button>
+
+    <div class="speech-bubble girl">
+      <span class="who">🎵</span>
+      <span class="text">
+        What are these? What are these?<br>
+        They're green grasshoppers.
+        <small>(O que são estes? Estes? São gafanhotos verdes!)</small>
+      </span>
+      <button class="play-btn" onclick="speak('What are these? What are these? They are green grasshoppers', this)">🔊</button>
+    </div>
+
+    <div class="speech-bubble girl">
+      <span class="who">🎵</span>
+      <span class="text">
+        What are those? What are those?<br>
+        They're curly caterpillars.
+        <small>(O que são aqueles? Aqueles? São lagartas enroladas!)</small>
+      </span>
+      <button class="play-btn" onclick="speak('What are those? What are those? They are curly caterpillars', this)">🔊</button>
+    </div>
+
+    <div class="speech-bubble girl">
+      <span class="who">🎵</span>
+      <span class="text">
+        What's that? What's that?<br>
+        It's a shiny black cat.
+        <small>(O que é aquilo? Aquilo? É um gato preto brilhante!)</small>
+      </span>
+      <button class="play-btn" onclick="speak('What is that? What is that? It is a shiny black cat', this)">🔊</button>
+    </div>
+
+    <div class="speech-bubble girl">
+      <span class="who">🎵</span>
+      <span class="text">
+        And what's this? Ooh! Ouch! Stop!<br>
+        It's an itchy, ouchy mosquito! 🦟
+        <small>(E o que é isto? Au! Para! É um mosquito que coça e dói!)</small>
+      </span>
+      <button class="play-btn" onclick="speak('And what is this? Ooh! Ouch! Stop! Oh no! It is an itchy ouchy mosquito', this)">🔊</button>
+    </div>
+
+    <!-- GLOSSARY DA MÚSICA -->
+    <div class="glossary">
+      <h4>📚 Palavras novas da música:</h4>
+      <div class="gloss-grid">
+        <div class="gloss-item">
+          <div class="gw">green</div>
+          <div class="gp">verde</div>
+          <button class="play-btn-mini" onclick="speak('green', this)">🔊</button>
+        </div>
+        <div class="gloss-item">
+          <div class="gw">curly</div>
+          <div class="gp">enrolado</div>
+          <button class="play-btn-mini" onclick="speak('curly', this)">🔊</button>
+        </div>
+        <div class="gloss-item">
+          <div class="gw">shiny</div>
+          <div class="gp">brilhante</div>
+          <button class="play-btn-mini" onclick="speak('shiny', this)">🔊</button>
+        </div>
+        <div class="gloss-item">
+          <div class="gw">black</div>
+          <div class="gp">preto</div>
+          <button class="play-btn-mini" onclick="speak('black', this)">🔊</button>
+        </div>
+        <div class="gloss-item">
+          <div class="gw">itchy</div>
+          <div class="gp">que coça</div>
+          <button class="play-btn-mini" onclick="speak('itchy', this)">🔊</button>
+        </div>
+        <div class="gloss-item">
+          <div class="gw">ouchy</div>
+          <div class="gp">que dói</div>
+          <button class="play-btn-mini" onclick="speak('ouchy', this)">🔊</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATIVIDADE 2 -->
+    <div class="activity">
+      <div class="activity-title">✏️ Complete as perguntas e respostas:</div>
+      <div class="blanks-row">
+        <span>1. What are these?</span>
+        <input type="text" class="blank-input" id="b2a" placeholder="They're...">
+        <span>grasshoppers.</span>
+      </div>
+      <div class="blanks-row">
+        <span>2. What's this?</span>
+        <input type="text" class="blank-input" id="b2b" placeholder="It's a/an...">
+        <span>caterpillar.</span>
+      </div>
+      <div class="blanks-row">
+        <span>3. What's that?</span>
+        <input type="text" class="blank-input" id="b2c" placeholder="It's a/an...">
+        <span>ant.</span>
+      </div>
+      <button class="check-btn" onclick="checkAct2()">✅ Conferir</button>
+      <div class="activity-fb" id="fb2"></div>
+      <button class="show-answer" onclick="showAnswer('ans2')">👁️ Ver respostas</button>
+      <div id="ans2" style="display:none;margin-top:10px;font-weight:800;color:#283593;font-size:0.88rem">
+        ✓ <strong>They're</strong> grasshoppers | <strong>It's a</strong> caterpillar | <strong>It's an</strong> ant
+        <br><small style="color:#888">(Lembre: 'ant' começa com vogal → "an")</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO 3: PHONICS one/ose -->
+  <div class="dialog-section">
+    <h2 class="dialog-title">🔤 Diálogo 3 — Phonics: sons "one" e "ose"</h2>
+    <p style="font-size:0.9rem;font-weight:700;color:#555;margin-bottom:12px;line-height:1.5">
+      Da Lesson 3 (Phonics). Ouça o som das palavrinhas que terminam em <strong>"one"</strong> e <strong>"ose"</strong>:
+    </p>
+
+    <div class="speech-bubble tio" style="border-color:#FF8A65;background:#FFF3E0">
+      <span class="who">🐶</span>
+      <span class="text">
+        The bone is under a stone, but his nose is in a rose!
+        <small>(O osso está embaixo da pedra, mas o nariz dele está numa rosa!)</small>
+      </span>
+      <button class="play-btn" onclick="speak('The bone is under a stone but his nose is in a rose', this)">🔊</button>
+    </div>
+
+    <div class="glossary">
+      <h4>🎵 Palavras com "one" e "ose":</h4>
+      <div class="gloss-grid">
+        <div class="gloss-item" style="border-color:#FF8A65">
+          <div class="gw" style="color:#E64A19">b<span style="background:#FFCCBC;padding:0 4px">one</span></div>
+          <div class="gp">osso</div>
+          <button class="play-btn-mini" onclick="speak('bone', this)">🔊</button>
+        </div>
+        <div class="gloss-item" style="border-color:#FF8A65">
+          <div class="gw" style="color:#E64A19">st<span style="background:#FFCCBC;padding:0 4px">one</span></div>
+          <div class="gp">pedra</div>
+          <button class="play-btn-mini" onclick="speak('stone', this)">🔊</button>
+        </div>
+        <div class="gloss-item" style="border-color:#26C6DA">
+          <div class="gw" style="color:#00838F">n<span style="background:#B2EBF2;padding:0 4px">ose</span></div>
+          <div class="gp">nariz</div>
+          <button class="play-btn-mini" onclick="speak('nose', this)">🔊</button>
+        </div>
+        <div class="gloss-item" style="border-color:#26C6DA">
+          <div class="gw" style="color:#00838F">r<span style="background:#B2EBF2;padding:0 4px">ose</span></div>
+          <div class="gp">rosa</div>
+          <button class="play-btn-mini" onclick="speak('rose', this)">🔊</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#FFF8E1;border:2px solid #FFB300;border-radius:12px;padding:12px;margin-top:14px;font-weight:800;font-size:0.88rem;color:#5D4037;line-height:1.5">
+      <strong>💡 DICA:</strong> "one" e "ose" rimam! Repare como <em>bone</em>, <em>stone</em> têm um som; e <em>nose</em>, <em>rose</em> têm outro som. Brinque de cantar essa frase!
+    </div>
+  </div>
+
+  <!-- MENSAGEM FINAL -->
+  <div class="final-msg">
+    <h2>🎉 Parabéns! 🎉</h2>
+    <p>Você terminou a leitura guiada! Agora pratique com o <strong>Quiz</strong> e o <strong>Simulado</strong> para fixar tudo. 🌟</p>
+  </div>
+
+</div>
+
+<script>
+function speak(text, btn) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.82;
+  if (btn) {
+    btn.classList.add('playing');
+    u.onend = () => btn.classList.remove('playing');
+    u.onerror = () => btn.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+
+function playAll(phrases, btn) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  btn.classList.add('playing');
+  btn.textContent = '⏸️ Tocando...';
+
+  let idx = 0;
+  const playNext = () => {
+    if (idx >= phrases.length) {
+      btn.classList.remove('playing');
+      btn.textContent = '▶️ Ouvir o diálogo todo';
+      return;
+    }
+    const u = new SpeechSynthesisUtterance(phrases[idx]);
+    u.lang = 'en-US';
+    u.rate = 0.82;
+    u.onend = () => {
+      idx++;
+      setTimeout(playNext, 500);
+    };
+    speechSynthesis.speak(u);
+  };
+  playNext();
+}
+
+function showAnswer(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function normalize(s) {
+  return s.trim().toLowerCase().replace(/['']/g, "'");
+}
+
+function checkAct1() {
+  const a = normalize(document.getElementById('b1a').value);
+  const b = normalize(document.getElementById('b1b').value);
+  const c = normalize(document.getElementById('b1c').value);
+
+  const inputs = ['b1a','b1b','b1c'];
+  const corrects = [
+    ['that', "that's"],
+    ['those'],
+    ['an']
+  ];
+  const answers = [a, b, c];
+
+  let allRight = true;
+  inputs.forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.classList.remove('right','wrong-i');
+    if (corrects[i].includes(answers[i])) {
+      el.classList.add('right');
+    } else {
+      el.classList.add('wrong-i');
+      allRight = false;
+    }
+  });
+
+  const fb = document.getElementById('fb1');
+  if (allRight) {
+    fb.textContent = "🎉 Tudo certo! Você é um craque!";
+    fb.className = 'activity-fb show success';
+  } else {
+    fb.textContent = "❌ Quase! Tente novamente ou veja as respostas.";
+    fb.className = 'activity-fb show fail';
+  }
+}
+
+function checkAct2() {
+  const a = normalize(document.getElementById('b2a').value);
+  const b = normalize(document.getElementById('b2b').value);
+  const c = normalize(document.getElementById('b2c').value);
+
+  const inputs = ['b2a','b2b','b2c'];
+  const corrects = [
+    ["they're", 'they are'],
+    ["it's a", 'it is a'],
+    ["it's an", 'it is an']
+  ];
+  const answers = [a, b, c];
+
+  let allRight = true;
+  inputs.forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.classList.remove('right','wrong-i');
+    if (corrects[i].includes(answers[i])) {
+      el.classList.add('right');
+    } else {
+      el.classList.add('wrong-i');
+      allRight = false;
+    }
+  });
+
+  const fb = document.getElementById('fb2');
+  if (allRight) {
+    fb.textContent = "🎉 Perfeito! Você entendeu tudo!";
+    fb.className = 'activity-fb show success';
+  } else {
+    fb.textContent = "❌ Quase! Lembre: várias = 'They're', 1 = 'It's a' (ou 'It's an' antes de vogal).";
+    fb.className = 'activity-fb show fail';
+  }
+}
+
+if ('speechSynthesis' in window) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+}
+</script>
+
+</body>
+</html>
